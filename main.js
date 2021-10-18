@@ -83,11 +83,15 @@ const fighter4 = {
 $blockArena.appendChild(createPlayer('ghj', fighter));
 $blockArena.appendChild(createPlayer('ghbdt', fighter1));
 
+
+function createRandomNum (){
+  return  Math.floor(Math.random() * (20 - 0) + 0);
+}
+
 function changeHP(play) {
     const playerLife = document.querySelector(`.player${play.player} .life`);
-
-    play.hp -= Math.floor(Math.random() * (20 - 0) + 0);
-    playerLife.style.width = `${play.hp}%`;
+    play.hp -= createRandomNum ();    
+    play.hp<=0? playerLife.style.width =0:playerLife.style.width = `${play.hp}%`;
     console.log(play.hp)
 
 };
