@@ -38,7 +38,10 @@ const fighter = {
     weapon: ['air gun', 'axe', 'bat', 'bazooka', 'dagger', 'pistol'],
     attack: attacks = () => {
         console.log(`${this.name} Fight`)
-    }
+    },
+    changeHP: changeHP,
+    elHP: elHP,
+    renderHP: renderHP
 }
 
 const fighter1 = {
@@ -49,8 +52,12 @@ const fighter1 = {
     weapon: ['air gun', 'axe', 'bat', 'bazooka', 'dagger', 'pistol'],
     attack: attacks = () => {
         console.log(`${this.name} Fight`)
-    }
+    },
+    changeHP: changeHP,
+    elHP: elHP,
+    renderHP: renderHP
 }
+console.log(fighter1.elHP)
 const fighter2 = {
     name: 'LIUKANG',
     hp: 1,
@@ -84,33 +91,66 @@ $blockArena.appendChild(createPlayer('ghj', fighter));
 $blockArena.appendChild(createPlayer('ghbdt', fighter1));
 
 
-function createRandomNum (){
-  return  Math.floor(Math.random() * (20 - 0) + 0);
+function getRandom(num) {
+    return Math.floor(Math.random() * (num - 0) + 0);
 }
 
-function changeHP(play) {
-    const playerLife = document.querySelector(`.player${play.player} .life`);
-    play.hp -= createRandomNum ();    
-    play.hp<=0? playerLife.style.width =0:playerLife.style.width = `${play.hp}%`;
-    console.log(play.hp)
+function changeHP(func) {
+    this.hp -= func;
+    if (this.hp <= 0) {
+        this.hp = 0;
+    }
+}
 
-};
+function elHP() {
+    const playerLife = document.querySelector(`.player${this.player} .life`);
+    return playerLife;
+}
 
-
+function renderHP() {
+    this.elHP().style.width = `${this.hp}%`;
+}
+function createReloadButton(){
+    const $reloadWrap= document.createElement('div');
+    const $reloadBtn=document.createElement('button');
+    $reloadWrap.classList.add('reloadWrap');
+    $reloadBtn.classList.add('button');
+    $reloadBtn.innerText='Restart';
+    $reloadWrap.insertAdjacentElement('afterbegin',$reloadBtn);
+    return  $blockArena.insertAdjacentElement('afterbegin', $reloadWrap);
+    
+}
+function playerLose(name){
+    const $loseTitle=document.createElement('div');
+    $loseTitle.classList.add('loseTitle');
+    $loseTitle.innerText = `${name} lose`;
+    return $loseTitle;
+}
+//$blockArena.appendChild(playerLose(fighter.name));
 
 $buttonFight.addEventListener('click', () => {
-
-    changeHP(fighter);
-    changeHP(fighter1);
+    fighter.changeHP(getRandom(20));
+    fighter1.changeHP(getRandom(20));
+    fighter.elHP();
+    fighter1.elHP();
+    fighter.renderHP();
+    fighter1.renderHP();
     if (fighter1.hp <= 0 && fighter.hp <= 0) {
         $buttonFight.disabled = true;
         alert('DRAW');
-        document.querySelector(`.player${fighter.player} .life`).style.width = `0%`;
-        document.querySelector(`.player${fighter1.player} .life`).style.width = `0%`;
-    } else if (fighter1.hp <= 0 || fighter.hp <= 0) {
+        createReloadButton();
+        document.querySelector('.reloadWrap .button').addEventListener('click',()=>{
+        window.location.reload()
+    })
+    } else if (fighter1.hp <= 0 || fighter.hp <= 0) {    
         $buttonFight.disabled = true;
-        fighter.hp <= 0 ? alert(`${fighter1.name} WINS`) : alert(`${fighter.name} WINS`);
-        fighter.hp <= 0 ? document.querySelector(`.player${fighter.player} .life`).style.width = `0%` : document.querySelector(`.player${fighter1.player} .life`).style.width = `0%`;
+        fighter.hp <= 0 ? $blockArena.appendChild(playerLose(fighter.name)):$blockArena.appendChild(playerLose(fighter1.name))
+       // fighter.hp <= 0 ? alert(`${fighter1.name} WINS`) : alert(`${fighter.name} WINS`);
+        createReloadButton();
+        document.querySelector('.reloadWrap .button').addEventListener('click',()=>{
+            window.location.reload()
+        })
+
     }
 
 })
