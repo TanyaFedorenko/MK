@@ -1,8 +1,14 @@
 const $blockMain = document.querySelector('.root');
 const $blockArena = document.querySelector('.arenas');
 const $blockRoot = document.createElement('div');
-const $buttonFight = document.querySelector('button');
+const $formFight = document.querySelector('.control');
 
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
 
 
 function createPlayer(name, player) {
@@ -39,9 +45,9 @@ const fighter = {
     attack: attacks = () => {
         console.log(`${this.name} Fight`)
     },
-    changeHP: changeHP,
-    elHP: elHP,
-    renderHP: renderHP
+    changeHP,
+    elHP,
+    renderHP
 }
 
 const fighter1 = {
@@ -53,11 +59,11 @@ const fighter1 = {
     attack: attacks = () => {
         console.log(`${this.name} Fight`)
     },
-    changeHP: changeHP,
-    elHP: elHP,
-    renderHP: renderHP
+    changeHP,
+    elHP,
+    renderHP
 }
-console.log(fighter1.elHP)
+
 const fighter2 = {
     name: 'LIUKANG',
     hp: 1,
@@ -95,8 +101,8 @@ function getRandom(num) {
     return Math.floor(Math.random() * (num - 0) + 0);
 }
 
-function changeHP(func) {
-    this.hp -= func;
+function changeHP(value) {
+    this.hp -= value;
     if (this.hp <= 0) {
         this.hp = 0;
     }
@@ -110,47 +116,84 @@ function elHP() {
 function renderHP() {
     this.elHP().style.width = `${this.hp}%`;
 }
-function createReloadButton(){
-    const $reloadWrap= document.createElement('div');
-    const $reloadBtn=document.createElement('button');
+
+function createReloadButton() {
+    const $reloadWrap = document.createElement('div');
+    const $reloadBtn = document.createElement('button');
     $reloadWrap.classList.add('reloadWrap');
     $reloadBtn.classList.add('button');
-    $reloadBtn.innerText='Restart';
-    $reloadWrap.insertAdjacentElement('afterbegin',$reloadBtn);
-    return  $blockArena.insertAdjacentElement('afterbegin', $reloadWrap);
-    
+    $reloadBtn.innerText = 'Restart';
+    $reloadWrap.insertAdjacentElement('afterbegin', $reloadBtn);
+    $reloadBtn.addEventListener('click', () => {
+        window.location.reload()
+    })
+    return $blockArena.insertAdjacentElement('afterbegin', $reloadWrap);
+
 }
-function playerLose(name){
-    const $loseTitle=document.createElement('div');
+
+function playerLose(name) {
+    const $loseTitle = document.createElement('div');
     $loseTitle.classList.add('loseTitle');
     $loseTitle.innerText = `${name} lose`;
     return $loseTitle;
 }
-//$blockArena.appendChild(playerLose(fighter.name));
 
-$buttonFight.addEventListener('click', () => {
-    fighter.changeHP(getRandom(20));
-    fighter1.changeHP(getRandom(20));
-    fighter.elHP();
-    fighter1.elHP();
-    fighter.renderHP();
-    fighter1.renderHP();
+
+function enemyAttack() {
+    const hit = ATTACK[getRandom(3) - 1];
+    const defence = ATTACK[getRandom(3) - 1];
+
+    return {
+        value: getRandom(HIT[hit]),
+        hit: hit,
+        defence,
+    }
+}
+
+function changeFighter(obj1, obj2, player, player1) {
+    obj1.hit === obj2.defence ? obj1.value = 0 : player.changeHP(obj1.value);
+    obj2.hit === obj1.defence ? obj2.value = 0 : player1.changeHP(obj2.value);
+    player.elHP();
+    player1.elHP();
+    player.renderHP();
+    player1.renderHP();
+}
+
+
+$formFight.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const enemy = enemyAttack();
+    const attack = {};
+
+    for (let item of $formFight) {
+        if (item.checked && item.name === 'hit') {
+            attack.value = getRandom(HIT[item.value]);
+            attack.hit = item.value;
+        }
+        if (item.checked && item.name === 'defence') {
+            attack.defence = item.value;
+        }
+        item.checked = false;
+    }
+    changeFighter(enemy, attack, fighter, fighter1);
+
     if (fighter1.hp <= 0 && fighter.hp <= 0) {
-        $buttonFight.disabled = true;
+        for (let item of $formFight) {
+            if (item.type === 'submit') {
+                item.disabled = true
+            }
+        }
         alert('DRAW');
         createReloadButton();
-        document.querySelector('.reloadWrap .button').addEventListener('click',()=>{
-        window.location.reload()
-    })
-    } else if (fighter1.hp <= 0 || fighter.hp <= 0) {    
-        $buttonFight.disabled = true;
-        fighter.hp <= 0 ? $blockArena.appendChild(playerLose(fighter.name)):$blockArena.appendChild(playerLose(fighter1.name))
-       // fighter.hp <= 0 ? alert(`${fighter1.name} WINS`) : alert(`${fighter.name} WINS`);
+
+    } else if (fighter1.hp <= 0 || fighter.hp <= 0) {
+        for (let item of $formFight) {
+            if (item.type === 'submit') {
+                item.disabled = true
+            }
+        }
+        fighter.hp <= 0 ? $blockArena.appendChild(playerLose(fighter.name)) : $blockArena.appendChild(playerLose(fighter1.name))
         createReloadButton();
-        document.querySelector('.reloadWrap .button').addEventListener('click',()=>{
-            window.location.reload()
-        })
 
     }
-
 })
