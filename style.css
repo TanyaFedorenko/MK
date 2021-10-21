@@ -266,7 +266,7 @@ body {
 
 .loseTitle {
     position: absolute;
-    top: 25%;
+    top: 40%;
     left: 50%;
     font-size: 36px;
     transform: translate(-50%, 0%);
@@ -276,3 +276,20 @@ body {
     font-family: "Mortal Kombat 3";
 }
 
+.reloadWrap {
+    position: absolute;
+    top: 83%;
+    z-index: 1000;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+.reloadWrap .button {
+    margin-top: 0;
+}
+.reloadWrap .button:active {
+    top: 2px;
+}
+.reloadWrap .button:active::after {
+    top: 1px;
+}
