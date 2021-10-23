@@ -1,10 +1,10 @@
 const $blockMain = document.querySelector('.root');
 const $blockArena = document.querySelector('.arenas');
 const $blockRoot = document.createElement('div');
-<<<<<<< Updated upstream
+
 const $buttonFight = document.querySelector('button');
 
-=======
+
 const $formFight = document.querySelector('.control');
 const $chat = document.querySelector('.chat')
 const HIT = {
@@ -13,7 +13,7 @@ const HIT = {
     foot: 20,
 }
 const ATTACK = ['head', 'body', 'foot'];
->>>>>>> Stashed changes
+
 
 const logs = {
     start: 'Часы показывали [time], когда [player1] и [player2] бросили вызов друг другу.',
@@ -106,10 +106,10 @@ const fighter1 = {
     elHP: elHP,
     renderHP: renderHP
 }
-<<<<<<< Updated upstream
+
 console.log(fighter1.elHP)
-=======
->>>>>>> Stashed changes
+
+
 const fighter2 = {
     name: 'LIUKANG',
     hp: 1,
@@ -143,15 +143,15 @@ const fighter4 = {
 function getRandom(num) {
     return Math.floor(Math.random() * (num - 1) + 1);
 }
-<<<<<<< Updated upstream
+
 
 function changeHP(func) {
     this.hp -= func;
-=======
+
 //изменение жизни бойца
 function changeHP(value) {
     this.hp -= value;
->>>>>>> Stashed changes
+
     if (this.hp <= 0) {
         this.hp = 0;
     }
@@ -165,11 +165,11 @@ function elHP() {
 function renderHP() {
     this.elHP().style.width = `${this.hp}%`;
 }
-<<<<<<< Updated upstream
+
 function createReloadButton(){
     const $reloadWrap= document.createElement('div');
     const $reloadBtn=document.createElement('button');
-=======
+
 //кнопка перезагрузки
 function createReloadButton() {
     const $reloadWrap = document.createElement('div');
@@ -182,19 +182,14 @@ function createReloadButton() {
     return  $blockArena.insertAdjacentElement('afterbegin', $reloadWrap);
     
 }
-<<<<<<< Updated upstream
-function playerLose(name){
-    const $loseTitle=document.createElement('div');
-=======
 // Блок отображения на экране проигравшего бойца
 function playerLose(name) {
     const $loseTitle = document.createElement('div');
->>>>>>> Stashed changes
     $loseTitle.classList.add('loseTitle');
     $loseTitle.innerText = `${name} lose`;
     return $loseTitle;
 }
-<<<<<<< Updated upstream
+
 //$blockArena.appendChild(playerLose(fighter.name));
 
 $buttonFight.addEventListener('click', () => {
@@ -215,7 +210,7 @@ $buttonFight.addEventListener('click', () => {
         $buttonFight.disabled = true;
         fighter.hp <= 0 ? $blockArena.appendChild(playerLose(fighter.name)):$blockArena.appendChild(playerLose(fighter1.name))
        // fighter.hp <= 0 ? alert(`${fighter1.name} WINS`) : alert(`${fighter.name} WINS`);
-=======
+
 //создание атаки врага
 function enemyAttack() {
     let defence = ATTACK[getRandom(3)-1];
@@ -267,17 +262,17 @@ function showResult() {
             generateLogs('end', fighter1,fighter);
         }
     
->>>>>>> Stashed changes
+
         createReloadButton();
         document.querySelector('.reloadWrap .button').addEventListener('click',()=>{
             window.location.reload()
         })
 
     }
-<<<<<<< Updated upstream
+
 
 })
-=======
+
 }
 //функция создание даты 
 function createDate(){
@@ -350,4 +345,4 @@ $formFight.addEventListener('submit', (e) => {
     }
     showResult();
 });
->>>>>>> Stashed changes
+
