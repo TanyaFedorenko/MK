@@ -144,10 +144,6 @@ function getRandom(num) {
     return Math.floor(Math.random() * (num - 1) + 1);
 }
 
-
-function changeHP(func) {
-    this.hp -= func;
-
 //изменение жизни бойца
 function changeHP(value) {
     this.hp -= value;
@@ -166,15 +162,11 @@ function renderHP() {
     this.elHP().style.width = `${this.hp}%`;
 }
 
-function createReloadButton(){
-    const $reloadWrap= document.createElement('div');
-    const $reloadBtn=document.createElement('button');
 
 //кнопка перезагрузки
 function createReloadButton() {
     const $reloadWrap = document.createElement('div');
     const $reloadBtn = document.createElement('button');
->>>>>>> Stashed changes
     $reloadWrap.classList.add('reloadWrap');
     $reloadBtn.classList.add('button');
     $reloadBtn.innerText='Restart';
@@ -192,7 +184,7 @@ function playerLose(name) {
 
 //$blockArena.appendChild(playerLose(fighter.name));
 
-$buttonFight.addEventListener('click', () => {
+/*$buttonFight.addEventListener('click', () => {
     fighter.changeHP(getRandom(20));
     fighter1.changeHP(getRandom(20));
     fighter.elHP();
@@ -205,12 +197,11 @@ $buttonFight.addEventListener('click', () => {
         createReloadButton();
         document.querySelector('.reloadWrap .button').addEventListener('click',()=>{
         window.location.reload()
-    })
-    } else if (fighter1.hp <= 0 || fighter.hp <= 0) {    
+    })} else if (fighter1.hp <= 0 || fighter.hp <= 0) {    
         $buttonFight.disabled = true;
         fighter.hp <= 0 ? $blockArena.appendChild(playerLose(fighter.name)):$blockArena.appendChild(playerLose(fighter1.name))
        // fighter.hp <= 0 ? alert(`${fighter1.name} WINS`) : alert(`${fighter.name} WINS`);
-
+*/
 //создание атаки врага
 function enemyAttack() {
     let defence = ATTACK[getRandom(3)-1];
@@ -266,14 +257,10 @@ function showResult() {
         createReloadButton();
         document.querySelector('.reloadWrap .button').addEventListener('click',()=>{
             window.location.reload()
-        })
-
+        });
     }
-
-
-})
-
 }
+
 //функция создание даты 
 function createDate(){
     const date =` ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
