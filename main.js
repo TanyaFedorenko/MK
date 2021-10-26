@@ -2,8 +2,15 @@ const $blockMain = document.querySelector('.root');
 const $blockArena = document.querySelector('.arenas');
 const $blockRoot = document.createElement('div');
 
-const $buttonFight = document.querySelector('button');
+const $formFight = document.querySelector('.control');
 
+
+const HIT = {
+    head: 30,
+    body: 25,
+    foot: 20,
+}
+const ATTACK = ['head', 'body', 'foot'];
 
 const $formFight = document.querySelector('.control');
 const $chat = document.querySelector('.chat')
@@ -88,9 +95,9 @@ const fighter = {
     attack: attacks = () => {
         console.log(`${this.name} Fight`)
     },
-    changeHP: changeHP,
-    elHP: elHP,
-    renderHP: renderHP
+    changeHP,
+    elHP,
+    renderHP
 }
 const fighter1 = {
     player: 2,
@@ -102,12 +109,10 @@ const fighter1 = {
     attack: attacks = () => {
         console.log(`${this.name} Fight`)
     },
-    changeHP: changeHP,
-    elHP: elHP,
-    renderHP: renderHP
+    changeHP,
+    elHP,
+    renderHP
 }
-
-console.log(fighter1.elHP)
 
 
 const fighter2 = {
@@ -144,7 +149,8 @@ function getRandom(num) {
     return Math.floor(Math.random() * (num - 1) + 1);
 }
 
-//изменение жизни бойца
+
+
 function changeHP(value) {
     this.hp -= value;
 
@@ -163,25 +169,29 @@ function renderHP() {
 }
 
 
-//кнопка перезагрузки
+
 function createReloadButton() {
     const $reloadWrap = document.createElement('div');
     const $reloadBtn = document.createElement('button');
     $reloadWrap.classList.add('reloadWrap');
     $reloadBtn.classList.add('button');
-    $reloadBtn.innerText='Restart';
-    $reloadWrap.insertAdjacentElement('afterbegin',$reloadBtn);
-    return  $blockArena.insertAdjacentElement('afterbegin', $reloadWrap);
-    
+    $reloadBtn.innerText = 'Restart';
+    $reloadWrap.insertAdjacentElement('afterbegin', $reloadBtn);
+    $reloadBtn.addEventListener('click', () => {
+        window.location.reload()
+    })
+    return $blockArena.insertAdjacentElement('afterbegin', $reloadWrap);
+
 }
-// Блок отображения на экране проигравшего бойца
+
+
+
 function playerLose(name) {
     const $loseTitle = document.createElement('div');
     $loseTitle.classList.add('loseTitle');
     $loseTitle.innerText = `${name} lose`;
     return $loseTitle;
 }
-
 //$blockArena.appendChild(playerLose(fighter.name));
 
 /*$buttonFight.addEventListener('click', () => {
@@ -191,10 +201,56 @@ function playerLose(name) {
     fighter1.elHP();
     fighter.renderHP();
     fighter1.renderHP();
+
+
+function enemyAttack() {
+    const hit = ATTACK[getRandom(3) - 1];
+    const defence = ATTACK[getRandom(3) - 1];
+
+    return {
+        value: getRandom(HIT[hit]),
+        hit: hit,
+        defence,
+    }
+}
+
+function changeFighter(obj1, obj2, player, player1) {
+    obj1.hit === obj2.defence ? obj1.value = 0 : player.changeHP(obj1.value);
+    obj2.hit === obj1.defence ? obj2.value = 0 : player1.changeHP(obj2.value);
+    player.elHP();
+    player1.elHP();
+    player.renderHP();
+    player1.renderHP();
+}
+
+
+$formFight.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const enemy = enemyAttack();
+    const attack = {};
+
+    for (let item of $formFight) {
+        if (item.checked && item.name === 'hit') {
+            attack.value = getRandom(HIT[item.value]);
+            attack.hit = item.value;
+        }
+        if (item.checked && item.name === 'defence') {
+            attack.defence = item.value;
+        }
+        item.checked = false;
+    }
+    changeFighter(enemy, attack, fighter, fighter1);
+
+
     if (fighter1.hp <= 0 && fighter.hp <= 0) {
-        $buttonFight.disabled = true;
+        for (let item of $formFight) {
+            if (item.type === 'submit') {
+                item.disabled = true
+            }
+        }
         alert('DRAW');
         createReloadButton();
+
         document.querySelector('.reloadWrap .button').addEventListener('click',()=>{
         window.location.reload()
     })} else if (fighter1.hp <= 0 || fighter.hp <= 0) {    
@@ -238,12 +294,14 @@ function showResult() {
         $chat.insertAdjacentHTML('afterbegin', `<p> ${logs.draw}</p>`)
         createReloadButton();
 
+
     } else if (fighter1.hp <= 0 || fighter.hp <= 0) {
         for (let item of $formFight) {
             if (item.type === 'submit') {
                 item.disabled = true
             }
         }
+
         if(fighter.hp <= 0 ){
             $blockArena.appendChild(playerLose(fighter.name));
             generateLogs('end', fighter,fighter1);
@@ -260,6 +318,7 @@ function showResult() {
         });
     }
 }
+
 
 //функция создание даты 
 function createDate(){
@@ -330,6 +389,8 @@ $formFight.addEventListener('submit', (e) => {
     
         generateLogs('defence',fighter, fighter1 );
     }
+
     showResult();
 });
+
 
