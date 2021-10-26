@@ -11,15 +11,9 @@ const HIT = {
     foot: 20,
 }
 const ATTACK = ['head', 'body', 'foot'];
-
-const $formFight = document.querySelector('.control');
 const $chat = document.querySelector('.chat')
-const HIT = {
-    head: 30,
-    body: 25,
-    foot: 20,
-}
-const ATTACK = ['head', 'body', 'foot'];
+
+
 
 
 const logs = {
@@ -201,19 +195,15 @@ function playerLose(name) {
     fighter1.elHP();
     fighter.renderHP();
     fighter1.renderHP();
-
-
 function enemyAttack() {
     const hit = ATTACK[getRandom(3) - 1];
     const defence = ATTACK[getRandom(3) - 1];
-
     return {
         value: getRandom(HIT[hit]),
         hit: hit,
         defence,
     }
 }
-
 function changeFighter(obj1, obj2, player, player1) {
     obj1.hit === obj2.defence ? obj1.value = 0 : player.changeHP(obj1.value);
     obj2.hit === obj1.defence ? obj2.value = 0 : player1.changeHP(obj2.value);
@@ -222,13 +212,10 @@ function changeFighter(obj1, obj2, player, player1) {
     player.renderHP();
     player1.renderHP();
 }
-
-
 $formFight.addEventListener('submit', (e) => {
     e.preventDefault();
     const enemy = enemyAttack();
     const attack = {};
-
     for (let item of $formFight) {
         if (item.checked && item.name === 'hit') {
             attack.value = getRandom(HIT[item.value]);
@@ -240,8 +227,6 @@ $formFight.addEventListener('submit', (e) => {
         item.checked = false;
     }
     changeFighter(enemy, attack, fighter, fighter1);
-
-
     if (fighter1.hp <= 0 && fighter.hp <= 0) {
         for (let item of $formFight) {
             if (item.type === 'submit') {
@@ -250,7 +235,6 @@ $formFight.addEventListener('submit', (e) => {
         }
         alert('DRAW');
         createReloadButton();
-
         document.querySelector('.reloadWrap .button').addEventListener('click',()=>{
         window.location.reload()
     })} else if (fighter1.hp <= 0 || fighter.hp <= 0) {    
@@ -392,5 +376,3 @@ $formFight.addEventListener('submit', (e) => {
 
     showResult();
 });
-
-
