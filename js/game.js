@@ -1,25 +1,69 @@
+import {
+    logs
+} from './logs.js';
+import {
+    HIT,
+    ATTACK,
+
+} from './enemyAttack.js';
+import {
+    getPlayers
+} from './Player.js';
+const [fighter, fighter1] = getPlayers;
+
+
 export default class Game {
-    constructor(arena, player, enemy, logs, attack, hit, chat, formFight) {
-        this.arena = arena,
-            this.enemy = enemy,
-            this.player = player,
+    constructor() {
+        this.arena = document.querySelector('.arenas'),
+            this.enemy = fighter1,
+            this.player = fighter,
             this.logs = logs,
-            this.attack = attack,
-            this.hit = hit,
-            this.chat = chat,
-            this.formFight = formFight
+            this.attack = ATTACK,
+            this.hit = HIT,
+            this.chat = document.querySelector('.chat'),
+            this.formFight = document.querySelector('.control')
+        // this.getAttack = getAttack
     }
-
-
     enemyAttack = () => {
         let defence = this.attack[this.getRandom(3) - 1];
         let hit = this.attack[this.getRandom(3) - 1];
-        return {
-            value: this.getRandom(this.hit[hit]),
-            hit: hit,
-            defence,
-        }
+     
+
+async function fetchAttack(){
+
+const obje={};
+     await fetch('http://reactmarathon-api.herokuapp.com/api/mk/player/fight', {
+            method: 'POST',
+            body: JSON.stringify({
+                hit,
+                defence
+            })})
+            .then( (body) => {
+            const res = body.json();            
+            return res;
+        }).then(async(res) => {
+            const{
+                player2
+            } = res;
+            return player2;
+        }).then(async(obj)=>{
+           const  {value, hit, defence} =  obj;
+
+            obje.value=value;
+            obje.hit=hit;
+            obje.defence=defence;
+            return obje
+        }).catch(console.log('console'));
+
+        return obje;
+
     }
+
+    const a= fetchAttack(hit,defence)
+   console.log(a)
+     return fetchAttack(hit,defence)
+    }
+
     playerAttack = (form, func, hit) => {
         const attack1 = {};
         for (let item of form) {
@@ -34,7 +78,10 @@ export default class Game {
         }
         return attack1;
     }
-    createReloadButton =() =>{
+
+
+
+    createReloadButton = () => {
         const $reloadWrap = document.createElement('div');
         const $reloadBtn = document.createElement('button');
         $reloadWrap.classList.add('reloadWrap');
@@ -45,7 +92,7 @@ export default class Game {
             window.location.reload()
         })
         return this.arena.insertAdjacentElement('afterbegin', $reloadWrap);
-    
+
     }
 
     playerLose = (name) => {
@@ -86,7 +133,7 @@ export default class Game {
         return date
     }
 
-    showResult=(player, player1, funcDate,funcLose, funcLogs, itemForm,itemBlock,itemChat, obj) =>{
+    showResult = (player, player1, funcDate, funcLose, funcLogs, itemForm, itemBlock, itemChat, obj) => {
         if (player1.hp <= 0 && player.hp <= 0) {
             for (let item of itemForm) {
                 if (item.type === 'submit') {
@@ -95,27 +142,26 @@ export default class Game {
             }
             itemChat.insertAdjacentHTML('afterbegin', `<p> ${obj.draw}</p>`)
             this.createReloadButton();
-    
-    
+
+
         } else if (player1.hp <= 0 || player.hp <= 0) {
             for (let item of itemForm) {
                 if (item.type === 'submit') {
                     item.disabled = true
                 }
             }
-    
-            if(player.hp <= 0 ){
+
+            if (player.hp <= 0) {
                 itemBlock.appendChild(funcLose(player.name));
-                funcLogs('end', this.player,this.enemy, obj,funcDate,this.getRandom,itemChat);
+                funcLogs('end', this.player, this.enemy, obj, funcDate, this.getRandom, itemChat);
+            } else {
+                itemBlock.appendChild(funcLose(player1.name));
+                funcLogs('end', this.enemy, this.player, obj, funcDate, this.getRandom, itemChat);
             }
-            else{
-                itemBlock.appendChild(funcLose(player1.name)); 
-                funcLogs('end', this.enemy,this.player,obj,funcDate,getRandom,itemChat);
-            }
-        
-    
+
+
             this.createReloadButton();
-            document.querySelector('.reloadWrap .button').addEventListener('click',()=>{
+            document.querySelector('.reloadWrap .button').addEventListener('click', () => {
                 window.location.reload()
             });
         }
@@ -148,8 +194,12 @@ export default class Game {
         }
     }
 
+
+
+
+
     start = () => {
-        console.log(this.logs)
+
         this.arena.appendChild(this.createPlayer(this.player));
         this.arena.appendChild(this.createPlayer(this.enemy));
         this.generateLogs('start', this.player.name, this.player.name1, this.logs, this.createDate, this.getRandom, this.chat)
@@ -162,11 +212,8 @@ export default class Game {
             e.preventDefault(); //остановка перезагрузки страницы
             //создание удара врага
             let enemy = this.enemyAttack();
+            console.log(enemy)
 
-            /*if (isNaN(enemy.value)) {
-                enemy = enemyAttack();
-                return enemy.value;
-            }*/
             //создание удара игрока
             const player = this.playerAttack(this.formFight, this.getRandom, this.hit);
 
